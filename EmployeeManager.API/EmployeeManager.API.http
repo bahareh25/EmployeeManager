@@ -1,0 +1,68 @@
+@EmployeeManager.API_HostAddress = http://localhost:5092
+
+### Get all employees - 200 with a (possibly empty) array
+GET {{EmployeeManager.API_HostAddress}}/api/employees
+Accept: application/json
+
+### Get one employee - 200, or 404 if the id does not exist
+GET {{EmployeeManager.API_HostAddress}}/api/employees/1
+Accept: application/json
+
+### Create an employee - 201 with a Location header
+POST {{EmployeeManager.API_HostAddress}}/api/employees
+Content-Type: application/json
+
+{
+  "name": "Ada Lovelace",
+  "email": "ada.lovelace@acme-corp.com",
+  "departmentId": 7
+}
+
+### Create with an unknown department - 400 with ValidationProblemDetails
+POST {{EmployeeManager.API_HostAddress}}/api/employees
+Content-Type: application/json
+
+{
+  "name": "Ada Lovelace",
+  "email": "ada.lovelace@acme-corp.com",
+  "departmentId": 999999
+}
+
+### Update an employee - 200 with the updated resource, or 404
+PUT {{EmployeeManager.API_HostAddress}}/api/employees/1
+Content-Type: application/json
+
+{
+  "name": "John Matthews",
+  "email": "john.matthews@acme-corp.com",
+  "departmentId": 2
+}
+
+### Delete an employee - 204, or 404
+DELETE {{EmployeeManager.API_HostAddress}}/api/employees/101
+
+###
+### Assignment 02 - the endpoints you must implement.
+### Uncomment as you build them. Status is a string, not a number.
+###
+
+### POST {{EmployeeManager.API_HostAddress}}/api/assignment
+### Content-Type: application/json
+###
+### {
+###   "employeeId": 1,
+###   "departmentId": 7,
+###   "assignmentDate": "2026-08-05T00:00:00Z"
+### }
+
+### GET {{EmployeeManager.API_HostAddress}}/api/assignment/1
+
+### PUT {{EmployeeManager.API_HostAddress}}/api/assignment/1
+### Content-Type: application/json
+###
+### {
+###   "assignmentDate": "2026-08-05T00:00:00Z",
+###   "status": "Active"
+### }
+
+### DELETE {{EmployeeManager.API_HostAddress}}/api/assignment/1
