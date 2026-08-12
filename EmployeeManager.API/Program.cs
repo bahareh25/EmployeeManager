@@ -1,7 +1,8 @@
-using System.Text.Json.Serialization;
 using EmployeeManager.Application.Repositories;
 using EmployeeManager.Infrastructure;
+using EmployeeManager.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace EmployeeManager.API
 {
@@ -37,6 +38,7 @@ namespace EmployeeManager.API
 
             //Add dependency Injection for Application and Infrastructure layers
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
