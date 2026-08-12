@@ -2,15 +2,6 @@
 
 namespace EmployeeManager.Application.Dtos;
 
-public class EmployeeDepartmentAssignmentDto
-{
-    public int AssignmentId { get; set; }
+public record EmployeeDepartmentAssignmentDto
+(int AssignmentId, int EmployeeId, int DepartmentId, DateTime AssignmentDate, AssignmentStatus Status);
 
-    public int EmployeeId { get; set; }
-
-    public int DepartmentId { get; set; }
-
-    public DateTime AssignmentDate { get; set; }
-
-    public AssignmentStatus Status { get; set; }
-}
