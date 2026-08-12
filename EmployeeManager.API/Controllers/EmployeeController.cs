@@ -181,6 +181,7 @@ namespace EmployeeManager.API.Controllers
             return NoContent();
         }
 
+
         //Mapping entity -> DTO in one place keeps the controller actions readable.
         //On a larger project this belongs in a dedicated mapper.
         private static EmployeeResponse ToResponse(Employee employee) =>

@@ -14,9 +14,7 @@ public class AssignmentRepository : IAssignmentRepository
         _context = context;
     }
 
-    public async Task<EmployeeDepartmentAssignment?> GetAssignmentById(
-        int id,
-        CancellationToken cancellationToken = default)
+    public async Task<EmployeeDepartmentAssignment?> GetAssignmentById(int id,CancellationToken cancellationToken = default)
     {
         return await _context.EmployeeDepartmentAssignments
             .AsNoTracking()
@@ -25,9 +23,7 @@ public class AssignmentRepository : IAssignmentRepository
                 cancellationToken);
     }
 
-    public async Task<bool> EmployeeExists(
-        int employeeId,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> EmployeeExists(int employeeId,CancellationToken cancellationToken = default)
     {
         return await _context.Employees
             .AsNoTracking()
@@ -36,9 +32,7 @@ public class AssignmentRepository : IAssignmentRepository
                 cancellationToken);
     }
 
-    public async Task<bool> DepartmentExists(
-        int departmentId,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> DepartmentExists(int departmentId,CancellationToken cancellationToken = default)
     {
         return await _context.Departments
             .AsNoTracking()
@@ -47,9 +41,7 @@ public class AssignmentRepository : IAssignmentRepository
                 cancellationToken);
     }
 
-    public async Task<Employee?> GetEmployeeById(
-        int employeeId,
-        CancellationToken cancellationToken = default)
+    public async Task<Employee?> GetEmployeeById(int employeeId,CancellationToken cancellationToken = default)
     {
         return await _context.Employees
             .AsNoTracking()
@@ -58,9 +50,7 @@ public class AssignmentRepository : IAssignmentRepository
                 cancellationToken);
     }
 
-    public async Task<EmployeeDepartmentAssignment> CreateAssignment(
-        EmployeeDepartmentAssignment assignment,
-        CancellationToken cancellationToken = default)
+    public async Task<EmployeeDepartmentAssignment> CreateAssignment(EmployeeDepartmentAssignment assignment,CancellationToken cancellationToken = default)
     {
         _context.EmployeeDepartmentAssignments.Add(assignment);
 
@@ -93,14 +83,10 @@ public class AssignmentRepository : IAssignmentRepository
         return existing;
     }
 
-    public async Task<bool> DeleteAssignmentIfExist(
-        int id,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAssignmentIfExist(int id,CancellationToken cancellationToken = default)
     {
         var assignment = await _context.EmployeeDepartmentAssignments
-            .FirstOrDefaultAsync(
-                a => a.AssignmentId == id,
-                cancellationToken);
+            .FirstOrDefaultAsync(a => a.AssignmentId == id,cancellationToken);
 
         if (assignment is null)
         {
@@ -114,10 +100,7 @@ public class AssignmentRepository : IAssignmentRepository
         return true;
     }
 
-    public async Task<bool> HasActiveAssignment(
-        int employeeId,
-        int excludeAssignmentId,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> HasActiveAssignment(int employeeId,int excludeAssignmentId,CancellationToken cancellationToken = default)
     {
         return await _context.EmployeeDepartmentAssignments
             .AsNoTracking()
