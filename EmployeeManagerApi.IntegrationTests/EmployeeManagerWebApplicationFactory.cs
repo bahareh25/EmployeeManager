@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagerApi.IntegrationTests;
 
@@ -34,6 +35,7 @@ public class EmployeeManagerWebApplicationFactory : WebApplicationFactory<Progra
     {
         builder.UseEnvironment("Development");
 
+     
         builder.ConfigureTestServices(services =>
         {
             // Drop the registrations that Program.cs made against the real database
@@ -44,6 +46,7 @@ public class EmployeeManagerWebApplicationFactory : WebApplicationFactory<Progra
             services.RemoveAll<AppDbContext>();
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(ConnectionString));
+
 
             // Note what is NOT here: no EnsureDeleted, no Migrate, no BuildServiceProvider.
             // ConfigureTestServices runs every time a host is created, so doing database
