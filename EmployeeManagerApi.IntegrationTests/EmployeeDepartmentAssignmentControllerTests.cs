@@ -2,8 +2,10 @@
 using EmployeeManager.Core.Models;
 using EmployeeManagerApi.IntegrationTests.Urls;
 using FluentAssertions;
+using System.Data;
 using System.Net;
 using System.Net.Http.Json;
+using static EmployeeManagerApi.IntegrationTests.Urls.ApiRoutes;
 
 namespace EmployeeManagerApi.IntegrationTests
 {
@@ -153,6 +155,83 @@ namespace EmployeeManagerApi.IntegrationTests
 
             // Assert — BR-04 violation.
             invalidResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        //BR-01- An employee cannot have two Active assignments.
+        
+                [Fact]
+        public async Task UpdateAssignment_WhenEmployeeAlreadyHasActiveAssignment_ShouldReturnConflict()
+        {
+            // Arrange
+            // Create the first assignment.
+            var firstCreateRequest = new CreateEmployeeDepartmentAssignmentDto
+            {
+                EmployeeId = 1,
+                DepartmentId = 2,
+                AssignmentDate = DateTime.UtcNow.Date
+            };
+
+            var firstCreateResponse = await _client.PostAsJsonAsync(
+                ApiRoutes.Assignments.Base,
+                firstCreateRequest);
+
+            firstCreateResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+            var firstAssignment =
+                await firstCreateResponse.Content.ReadFromJsonAsync<EmployeeDepartmentAssignmentDto>(
+                    ApiTestFixture.JsonOptions);
+
+            firstAssignment.Should().NotBeNull();
+
+            // Activate the first assignment.
+            var activateFirstRequest = new UpdateEmployeeDepartmentAssignmentDto
+            {
+                AssignmentDate = firstCreateRequest.AssignmentDate,
+                Status = AssignmentStatus.Active
+            };
+
+            var activateFirstResponse = await _client.PutAsJsonAsync(
+                ApiRoutes.Assignments.ById(firstAssignment!.AssignmentId),
+                activateFirstRequest);
+
+            activateFirstResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            // Create a second assignment for the SAME employee,
+            // but use a different department.
+            var secondCreateRequest = new CreateEmployeeDepartmentAssignmentDto
+            {
+                EmployeeId = 1,
+                DepartmentId = 3,
+                AssignmentDate = DateTime.UtcNow.Date
+            };
+
+            var secondCreateResponse = await _client.PostAsJsonAsync(
+                ApiRoutes.Assignments.Base,
+                secondCreateRequest);
+
+            secondCreateResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+            var secondAssignment =
+                await secondCreateResponse.Content.ReadFromJsonAsync<EmployeeDepartmentAssignmentDto>(
+                    ApiTestFixture.JsonOptions);
+
+            secondAssignment.Should().NotBeNull();
+
+            // Act
+            // Try to activate the second assignment.
+            var activateSecondRequest = new UpdateEmployeeDepartmentAssignmentDto
+            {
+                AssignmentDate = secondCreateRequest.AssignmentDate,
+                Status = AssignmentStatus.Active
+            };
+
+            var activateSecondResponse = await _client.PutAsJsonAsync(
+                ApiRoutes.Assignments.ById(secondAssignment!.AssignmentId),
+                activateSecondRequest);
+
+            // Assert
+            // BR-01 requires 409 Conflict.
+            activateSecondResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
         }
     }
 }
